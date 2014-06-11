@@ -1,3 +1,7 @@
 {
-  "name": "curator"
+  "name": "curator",
+  "ignore": ["/test.*"],
+  "devDependencies": {
+    "react": "x"
+  }
 }

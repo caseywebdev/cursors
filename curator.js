@@ -20,6 +20,15 @@
     return isEqualSubset(a, b) && isEqualSubset(b, a);
   };
 
+  var wrapDeltaWithCursor = function (delta, cursor) {
+    for (var i = cursor.length - 1; i >= 0; --i) {
+      var temp = {};
+      temp[cursor[i]] = delta;
+      delta = temp;
+    }
+    return delta;
+  };
+
   return {
     propTypes: {
       curator: React.PropTypes.component,
@@ -31,21 +40,26 @@
     },
 
     update: function (delta, cursor) {
-      if (!cursor) cursor = this.props.cursor;
+      if (!cursor) cursor = this.getCursor();
       var curator = this.props.curator;
       if (curator) return curator.update(delta, cursor);
-      this.setState(update(this.state, delta));
+      this.setState(update(this.state, wrapDeltaWithCursor(delta, cursor)));
     },
 
     getState: function (cursor) {
-      if (!cursor) cursor = this.props.cursor;
+      if (!cursor) cursor = this.getCursor();
       var state = this.props.curator.state;
       for (var i = 0, l = cursor.length; i < l; ++i) state = state[cursor[i]];
       return state;
     },
 
+    getCurator: function () {
+      return this.props.curator || this;
+    },
+
     getCursor: function (i, cursor) {
-      return (cursor || this.props.cursor).concat('' + i);
+      if (!cursor) cursor = this.props.cursor || [];
+      return i == null ? cursor : cursor.concat(i.toString());
     }
   };
 });
