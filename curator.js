@@ -50,15 +50,15 @@
 
     getState: function (cursor) {
       if (!cursor) cursor = this.getCursor();
-      var state = this.props.curator.state;
+      var state = this.getCurator().state;
       for (var i = 0, l = cursor.length; i < l; ++i) state = state[cursor[i]];
       return state;
     },
 
     update: function (delta, cursor) {
       if (!cursor) cursor = this.getCursor();
-      var curator = this.props.curator;
-      if (curator) return curator.update(delta, cursor);
+      var curator = this.getCurator();
+      if (curator !== this) return curator.update(delta, cursor);
       this.setState(update(this.state, wrapDeltaWithCursor(delta, cursor)));
       return this;
     }
