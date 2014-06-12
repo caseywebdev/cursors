@@ -27,30 +27,26 @@ The Curator object itself should be mixed-in to all Curator-using components wit
 
 ### Component-Level
 
-#### this.getCurator()
+#### this.getCursor([i], [remotes], [cursor])
 
-Returns the `curator` for the current component.
-
-#### this.getCursor([i], [cursor])
-
-Returns a new `cursor` with the given index/indices appended. If an index or
-array of indicies is not given, the cursor is returned. If a cursor is not
-given, `this.props.cursor` is assumed.
-
-#### this.getState([cursor])
-
-Returns the local state for the component. `this.getState()` should be used
-instead of `this.state`, as it uses the given cursor (defaulting to
-`this.props.cursor`) to traverse down the `curator`'s global state and return
-that piece.
+Returns a new `cursor`. If an index or array of indicies is not given, the
+cursor is returned. If a cursor is not given, `this.props.cursor` is assumed.
 
 #### this.update(delta, [cursor])
 
-Use `update` to change state rather than `this.setState`. The delta
-object is a declarative statement of changes to make to the local state
-(see [Immutability Helpers] for the syntax). To change something other
-than the component's local state, pass in a cursor pointing to another
-part of the global state.
+Use `update` to change state rather than `this.setState`. The delta object is a
+declarative statement of changes to make to the local state (see [Immutability
+Helpers] for the syntax). To change something other than the component's local
+state, pass in a remote cursor pointing to another part of the global state.
+
+#### this.state.local
+
+This is the object that will contain the state of the app as it appears locally to the current component.
+
+#### this.state[someRemoteName]
+
+This is how you would access remote states that were specified in `getCursor` by
+the parent component. The root component will never have any remotes.
 
 ## Examples
 
@@ -64,11 +60,14 @@ var MyComponent = React.createClass({
   // definition.
   mixins: [Curator],
 
-  // The only component that should define `getInitialState` is the top level
-  // component, known as the `curator`.
+  // The only component that should define `getInitialState` is the root
+  // component. It should define its state in the `local` namespace. This allows
+  // `remotes` to use other namespaces in `state`
   getInitialState: function () {
     return {
-      users: [...]
+      local: {
+        users: [...]
+      }
     };
   },
 
@@ -79,15 +78,11 @@ var MyComponent = React.createClass({
     this.update({name: {$set: ev.target.value}});
   },
 
-  // When rendering child components, always pass in the `curator` via
-  // `this.getCurator()` and the appropriate `cursor` for the child component
-  // via `this.getCursor(indexOrIndicies)`.
+  // When rendering child components, always pass the appropriate `cursor` for
+  // the child component via `this.getCursor(indexOrIndicies)`.
   render: function () {
     return (
-      <MyUsersComponent
-        cursor={this.getCursor()}
-        cursor={this.getCursor('users')}
-      />
+      <MyUsersComponent cursor={this.getCursor('users')} />
     );
   }
 });

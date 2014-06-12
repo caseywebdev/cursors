@@ -1,6 +1,9 @@
 {
   "name": "curator",
-  "ignore": ["/test.*"],
+  "version": "0.0.2",
+  "ignore": [
+    "/test.*"
+  ],
   "devDependencies": {
     "react": "0.10.0"
   }

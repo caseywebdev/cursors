@@ -16,18 +16,22 @@
 
     handleChange: function (ev) {
       var val = parseInt(ev.target.value) || 0;
-      if (this.getState() !== val) this.update({$set: val});
+      if (this.state.local !== val) this.update({$set: val});
+    },
+
+    handleRemove: function () {
+      this.props.onRemove(this.props.key);
     },
 
     render: function () {
       return React.DOM.div(null,
         React.DOM.input({
-          value: this.getState(),
+          value: this.state.local,
           onChange: this.handleChange
         }),
         React.DOM.input({
           type: 'button',
-          onClick: this.props.onRemove,
+          onClick: this.handleRemove,
           value: 'Remove'
         })
       );
@@ -48,15 +52,14 @@
     renderNumber: function (n, i) {
       return NumberListItem({
         key: i,
-        curator: this.getCurator(),
         cursor: this.getCursor(i),
-        onRemove: this.handleRemove.bind(this, i)
+        onRemove: this.handleRemove
       });
     },
 
     render: function () {
       return React.DOM.div(null,
-        this.getState().map(this.renderNumber),
+        this.state.local.map(this.renderNumber),
         React.DOM.input({
           type: 'button',
           onClick: this.handleAdd,
@@ -70,11 +73,11 @@
     mixins: [Curator],
 
     getCardinality: function () {
-      return this.getState().length;
+      return this.state.local.length;
     },
 
     getSum: function () {
-      return this.getState().reduce(function (sum, n) { return sum + n; }, 0);
+      return this.state.local.reduce(function (sum, n) { return sum + n; }, 0);
     },
 
     getMean: function () {
@@ -95,33 +98,41 @@
 
     getInitialState: function () {
       return {
-        numbers: [1, 2, 3]
+        local: {
+          numbers: [1, 2, 3]
+        },
+        undo: [],
+        redo: []
       };
     },
 
-    componentWillMount: function () {
-      this.undo = [];
-      this.redo = [];
-    },
-
-    componentWillUpdate: function () {
-      if (this.timeTraveling) return this.timeTraveling = false;
-      this.undo.push(this.state);
-      this.redo = [];
+    componentDidUpdate: function (__, prevState) {
+      if (prevState.undo !== this.state.undo) return;
+      if (prevState.redo !== this.state.redo) return;
+      this.setState({
+        undo: this.state.undo.concat(prevState.local),
+        redo: []
+      });
     },
 
     handleUndo: function () {
-      if (!this.undo.length) return;
-      this.timeTraveling = true;
-      this.redo.push(this.state);
-      this.setState(this.undo.pop());
+      var undo = this.state.undo;
+      if (!this.state.undo.length) return;
+      this.setState({
+        local: undo[undo.length - 1],
+        undo: undo.slice(0, -1),
+        redo: this.state.redo.concat(this.state.local)
+      });
     },
 
     handleRedo: function () {
-      if (!this.redo.length) return;
-      this.timeTraveling = true;
-      this.undo.push(this.state);
-      this.setState(this.redo.pop());
+      var redo = this.state.redo;
+      if (!this.state.redo.length) return;
+      this.setState({
+        local: redo[redo.length - 1],
+        redo: redo.slice(0, -1),
+        undo: this.state.undo.concat(this.state.local)
+      });
     },
 
     render: function () {
@@ -131,22 +142,16 @@
             type: 'button',
             onClick: this.handleUndo,
             value: 'Undo',
-            disabled: this.undo.length === 0
+            disabled: this.state.undo.length === 0
           }),
           React.DOM.input({
             type: 'button',
             onClick: this.handleRedo,
             value: 'Redo',
-            disabled: this.redo.length === 0
+            disabled: this.state.redo.length === 0
           }),
-          NumberList({
-            curator: this.getCurator(),
-            cursor: this.getCursor('numbers')
-          }),
-          Stats({
-            curator: this.getCurator(),
-            cursor: this.getCursor('numbers')
-          })
+          NumberList({cursor: this.getCursor('numbers')}),
+          Stats({cursor: this.getCursor('numbers')})
         )
       );
     }
