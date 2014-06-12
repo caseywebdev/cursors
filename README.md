@@ -35,7 +35,7 @@ Returns a new `cursor` with its path set to `name`'s path concatenated with
 #### this.update(name, delta)
 
 Update the specified state key `name` with the change definitions in `delta`.
-For `delta` syntax check out React's [Immutibility Helpers].
+For `delta` syntax check out React's [Immutability Helpers].
 
 ## Examples
 
