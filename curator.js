@@ -60,6 +60,7 @@
       var curator = this.props.curator;
       if (curator) return curator.update(delta, cursor);
       this.setState(update(this.state, wrapDeltaWithCursor(delta, cursor)));
+      return this;
     }
   };
 });
