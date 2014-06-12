@@ -2,6 +2,6 @@
   "name": "curator",
   "ignore": ["/test.*"],
   "devDependencies": {
-    "react": "x"
+    "react": "0.10.0"
   }
 }
