@@ -7,16 +7,9 @@
   var NumberListItem = React.createClass({
     mixins: [Curator],
 
-    renderNumber: function (n, i) {
-      return NumberListItem({
-        curator: this.getCurator(),
-        cursor: this.getCursor(i)
-      });
-    },
-
     handleChange: function (ev) {
       var val = parseInt(ev.target.value) || 0;
-      if (this.state.local !== val) this.update({$set: val});
+      if (this.state.number !== val) this.update('number', {$set: val});
     },
 
     handleRemove: function () {
@@ -26,7 +19,7 @@
     render: function () {
       return React.DOM.div(null,
         React.DOM.input({
-          value: this.state.local,
+          value: this.state.number,
           onChange: this.handleChange
         }),
         React.DOM.input({
@@ -42,24 +35,24 @@
     mixins: [Curator],
 
     handleAdd: function () {
-      this.update({$push: [0]});
+      this.update('numbers', {$push: [0]});
     },
 
     handleRemove: function (i) {
-      this.update({$splice: [[i, 1]]});
+      this.update('numbers', {$splice: [[i, 1]]});
     },
 
     renderNumber: function (n, i) {
       return NumberListItem({
         key: i,
-        cursor: this.getCursor(i),
+        cursors: {number: this.getCursor('numbers', i)},
         onRemove: this.handleRemove
       });
     },
 
     render: function () {
       return React.DOM.div(null,
-        this.state.local.map(this.renderNumber),
+        this.state.numbers.map(this.renderNumber),
         React.DOM.input({
           type: 'button',
           onClick: this.handleAdd,
@@ -73,11 +66,13 @@
     mixins: [Curator],
 
     getCardinality: function () {
-      return this.state.local.length;
+      return this.state.numbers.length;
     },
 
     getSum: function () {
-      return this.state.local.reduce(function (sum, n) { return sum + n; }, 0);
+      return this.state.numbers.reduce(function (sum, n) {
+        return sum + n;
+      }, 0);
     },
 
     getMean: function () {
@@ -98,41 +93,33 @@
 
     getInitialState: function () {
       return {
-        local: {
-          numbers: [1, 2, 3]
-        },
-        undo: [],
-        redo: []
+        numbers: [1, 2, 3]
       };
     },
 
-    componentDidUpdate: function (__, prevState) {
-      if (prevState.undo !== this.state.undo) return;
-      if (prevState.redo !== this.state.redo) return;
-      this.setState({
-        undo: this.state.undo.concat(prevState.local),
-        redo: []
-      });
+    componentWillMount: function () {
+      this.undo = [];
+      this.redo = [];
+    },
+
+    componentWillUpdate: function () {
+      if (this.timeTraveling) return this.timeTraveling = false;
+      this.undo.push(this.state);
+      this.redo = [];
     },
 
     handleUndo: function () {
-      var undo = this.state.undo;
-      if (!this.state.undo.length) return;
-      this.setState({
-        local: undo[undo.length - 1],
-        undo: undo.slice(0, -1),
-        redo: this.state.redo.concat(this.state.local)
-      });
+      if (!this.undo.length) return;
+      this.timeTraveling = true;
+      this.redo.push(this.state);
+      this.setState(this.undo.pop());
     },
 
     handleRedo: function () {
-      var redo = this.state.redo;
-      if (!this.state.redo.length) return;
-      this.setState({
-        local: redo[redo.length - 1],
-        redo: redo.slice(0, -1),
-        undo: this.state.undo.concat(this.state.local)
-      });
+      if (!this.redo.length) return;
+      this.timeTraveling = true;
+      this.undo.push(this.state);
+      this.setState(this.redo.pop());
     },
 
     render: function () {
@@ -142,16 +129,16 @@
             type: 'button',
             onClick: this.handleUndo,
             value: 'Undo',
-            disabled: this.state.undo.length === 0
+            disabled: this.undo.length === 0
           }),
           React.DOM.input({
             type: 'button',
             onClick: this.handleRedo,
             value: 'Redo',
-            disabled: this.state.redo.length === 0
+            disabled: this.redo.length === 0
           }),
-          NumberList({cursor: this.getCursor('numbers')}),
-          Stats({cursor: this.getCursor('numbers')})
+          NumberList({cursors: {numbers: this.getCursor('numbers')}}),
+          Stats({cursors: {numbers: this.getCursor('numbers')}})
         )
       );
     }

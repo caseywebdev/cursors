@@ -27,39 +27,15 @@ The Curator object itself should be mixed-in to all Curator-using components wit
 
 ### Component-Level
 
-#### this.getCursor([path], [remotes])
+#### this.getCursor(name, [path])
 
-Returns a new `cursor`. If a path or array of paths is not given, the local
-cursor is returned. The path will be treated as relative to the cursor's path.
-`remotes` may optionally be specified as key-value pairs where the key is the
-remote name and the value is an absolute path from the root.
+Returns a new `cursor` with its path set to `name`'s path concatenated with
+`path`
 
-#### this.getRemoteCursor([remoteName], [path], [remotes])
+#### this.update(name, delta)
 
-Identical to `getCursor`, except that `path` is branched off of the specified
-named remote cursor.
-
-#### this.update(delta)
-
-Use `update` to change state rather than `this.setState`. The delta object is a
-declarative statement of changes to make to the local state (see [Immutability
-Helpers] for the syntax). To change something other than the component's local
-state, pass in a remote cursor pointing to another part of the global state.
-
-#### this.updateRemote(remoteName, delta)
-
-Identical to `update`, except that `delta` is applied at the specified named
-remote cursor.
-
-#### this.state.local
-
-This is the object that will contain the state of the app as it appears locally
-to the current component.
-
-#### this.state[someRemoteName]
-
-This is how you would access remote states that were specified in `getCursor` by
-the parent component. The root component will never have any remotes.
+Update the specified state key `name` with the change definitions in `delta`.
+For `delta` syntax check out React's [Immutibility Helpers].
 
 ## Examples
 
@@ -78,9 +54,7 @@ var MyComponent = React.createClass({
   // `remotes` to use other namespaces in `state`
   getInitialState: function () {
     return {
-      local: {
-        users: [...]
-      }
+      users: [...]
     };
   },
 
@@ -88,14 +62,14 @@ var MyComponent = React.createClass({
   // to use `this.setState`. Instead, use `this.update`. `update` takes a delta
   // object. Check the "Immutability Helpers" link for more information.
   handleChange: function (ev) {
-    this.update({name: {$set: ev.target.value}});
+    this.update('user', {name: {$set: ev.target.value}});
   },
 
   // When rendering child components, always pass the appropriate `cursor` for
   // the child component via `this.getCursor(indexOrIndicies)`.
   render: function () {
     return (
-      <MyUsersComponent cursor={this.getCursor('users')} />
+      <MyUsersComponent cursors={{users: this.getCursor('users')}} />
     );
   }
 });
