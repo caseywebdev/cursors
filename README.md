@@ -27,24 +27,34 @@ The Curator object itself should be mixed-in to all Curator-using components wit
 
 ### Component-Level
 
-#### this.getCursor([path], [remotes], [cursor])
+#### this.getCursor([path], [remotes])
 
-Returns a new `cursor`. If a path or array of paths is not given, the cursor is
-returned. The path will be treated as relative to the cursor's path. `remotes`
-may optionally be specified as key-value pairs where the key is the remote name
-and the value is a path from the root. If a cursor is not given,
-`this.props.cursor` is assumed.
+Returns a new `cursor`. If a path or array of paths is not given, the local
+cursor is returned. The path will be treated as relative to the cursor's path.
+`remotes` may optionally be specified as key-value pairs where the key is the
+remote name and the value is an absolute path from the root.
 
-#### this.update(delta, [cursor])
+#### this.getRemoteCursor([remoteName], [path], [remotes])
+
+Identical to `getCursor`, except that `path` is branched off of the specified
+named remote cursor.
+
+#### this.update(delta)
 
 Use `update` to change state rather than `this.setState`. The delta object is a
 declarative statement of changes to make to the local state (see [Immutability
 Helpers] for the syntax). To change something other than the component's local
 state, pass in a remote cursor pointing to another part of the global state.
 
+#### this.updateRemote(remoteName, delta)
+
+Identical to `update`, except that `delta` is applied at the specified named
+remote cursor.
+
 #### this.state.local
 
-This is the object that will contain the state of the app as it appears locally to the current component.
+This is the object that will contain the state of the app as it appears locally
+to the current component.
 
 #### this.state[someRemoteName]
 

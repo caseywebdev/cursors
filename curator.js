@@ -90,12 +90,20 @@
       return cursor;
     },
 
+    getRemoteCursor: function (name, path, remotes) {
+      return this.getCursor(path, remotes, this.getCursor().remotes[name]);
+    },
+
     update: function (delta, cursor) {
       if (!cursor) cursor = this.getCursor();
       if (cursor.root !== this) return cursor.root.update(delta, cursor);
       var updated = update(this.state.local, wrapWithPath(delta, cursor.path));
       this.setState({local: updated});
       return this;
+    },
+
+    updateRemote: function (name, delta) {
+      return this.update(delta, this.getRemoteCursor(name));
     }
   };
 });
