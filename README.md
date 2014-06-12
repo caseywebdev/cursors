@@ -54,7 +54,8 @@ part of the global state.
 
 ## Examples
 
-Check out [the test file](test.html) for a full example. Here's the basics:
+Check out [the test file](https://caseywebdev.github.io/curator/test.html) for a
+full example. Here's the basics:
 
 ```jsx
 var MyComponent = React.createClass({
