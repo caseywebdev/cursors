@@ -27,10 +27,13 @@ The Curator object itself should be mixed-in to all Curator-using components wit
 
 ### Component-Level
 
-#### this.getCursor([i], [remotes], [cursor])
+#### this.getCursor([path], [remotes], [cursor])
 
-Returns a new `cursor`. If an index or array of indicies is not given, the
-cursor is returned. If a cursor is not given, `this.props.cursor` is assumed.
+Returns a new `cursor`. If a path or array of paths is not given, the cursor is
+returned. The path will be treated as relative to the cursor's path. `remotes`
+may optionally be specified as key-value pairs where the key is the remote name
+and the value is a path from the root. If a cursor is not given,
+`this.props.cursor` is assumed.
 
 #### this.update(delta, [cursor])
 
