@@ -76,17 +76,10 @@
       if (!remotes) remotes = {};
       if (!cursor) cursor = this.props.cursor;
       if (!cursor) cursor = {root: this, path: [], remotes: {}};
-
-      cursor = {
-        root: cursor.root,
-        path: cursor.path.concat(path).map(String),
-        remotes: {}
-      };
-
+      cursor = {root: cursor.root, path: cursor.path.concat(path), remotes: {}};
       for (var name in remotes) {
         cursor.remotes[name] = this.getCursor(remotes[name], {}, cursor.root);
       }
-
       return cursor;
     },
 
