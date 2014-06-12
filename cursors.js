@@ -66,7 +66,7 @@
     getCursor: function (name, path) {
       if (path == null) path = [];
       var cursors = this.props.cursors;
-      var cursor =  cursors ? cursors[name] : {root: this, path: [name]};
+      var cursor = (cursors && cursors[name]) || {root: this, path: [name]};
       return {root: cursor.root, path: cursor.path.concat(path)};
     },
 
