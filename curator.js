@@ -39,11 +39,13 @@
       return !isEqual(this.props, props) || !isEqual(this.state, state);
     },
 
-    update: function (delta, cursor) {
-      if (!cursor) cursor = this.getCursor();
-      var curator = this.props.curator;
-      if (curator) return curator.update(delta, cursor);
-      this.setState(update(this.state, wrapDeltaWithCursor(delta, cursor)));
+    getCurator: function () {
+      return this.props.curator || this;
+    },
+
+    getCursor: function (i, cursor) {
+      if (!cursor) cursor = this.props.cursor || [];
+      return i == null ? cursor : cursor.concat(i).map(String);
     },
 
     getState: function (cursor) {
@@ -53,13 +55,11 @@
       return state;
     },
 
-    getCurator: function () {
-      return this.props.curator || this;
-    },
-
-    getCursor: function (i, cursor) {
-      if (!cursor) cursor = this.props.cursor || [];
-      return i == null ? cursor : cursor.concat(i.toString());
+    update: function (delta, cursor) {
+      if (!cursor) cursor = this.getCursor();
+      var curator = this.props.curator;
+      if (curator) return curator.update(delta, cursor);
+      this.setState(update(this.state, wrapDeltaWithCursor(delta, cursor)));
     }
   };
 });
