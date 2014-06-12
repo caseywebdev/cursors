@@ -4,7 +4,7 @@
   } else if (typeof exports !== 'undefined') {
     module.exports = factory(require('react/addons'));
   } else {
-    root.Curator = factory(root.React);
+    root.Cursors = factory(root.React);
   }
 })(this, function (React) {
   'use strict';

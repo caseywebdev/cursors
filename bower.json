@@ -1,6 +1,6 @@
 {
-  "name": "curator",
-  "version": "0.0.5",
+  "name": "cursors",
+  "version": "0.0.6",
   "ignore": [
     "/.gitignore",
     "/test.*"

@@ -2,10 +2,10 @@
   'use strict';
 
   var React = root.React;
-  var Curator = root.Curator;
+  var Cursors = root.Cursors;
 
   var NumberListItem = React.createClass({
-    mixins: [Curator],
+    mixins: [Cursors],
 
     handleChange: function (ev) {
       var val = parseInt(ev.target.value) || 0;
@@ -32,7 +32,7 @@
   });
 
   var NumberList = React.createClass({
-    mixins: [Curator],
+    mixins: [Cursors],
 
     handleAdd: function () {
       this.update('numbers', {$push: [0]});
@@ -63,7 +63,7 @@
   });
 
   var Stats = React.createClass({
-    mixins: [Curator],
+    mixins: [Cursors],
 
     getCardinality: function () {
       return this.state.numbers.length;
@@ -89,7 +89,7 @@
   });
 
   var App = React.createClass({
-    mixins: [Curator],
+    mixins: [Cursors],
 
     getInitialState: function () {
       return {

@@ -1,29 +1,29 @@
-# Curator
+# Cursors
 
-Maintaining your React state.
+Maintain your React state with Cursors.
 
-Curator is a [React] mixin that is inspired by [David Nolan]'s [Om]. This is a
+Cursors is a [React] mixin that is inspired by [David Nolan]'s [Om]. This is a
 much lighter implementation that is focused on Nolan's idea of a single global
 state and using cursors to to create smaller local states within a single shared
 data structure.
 
-Curator leverages the [Immutability Helpers] provided by [React Add-ons]. By
+Cursors leverages the [Immutability Helpers] provided by [React Add-ons]. By
 avoiding mutation, tasks like undo/redo become trivial, reasoning about problems
 becomes easier, and bugs are easier to avoid.
 
 ## Install
 
 ```bash
-bower install curator
+bower install Cursors
 ```
 
 ## API
 
 ### Top-Level
 
-#### Curator
+#### Cursors
 
-The Curator object itself should be mixed-in to all Curator-using components with React's `mixin` method.
+The Cursors object itself should be mixed-in to all Cursors-using components with React's `mixin` method.
 
 ### Component-Level
 
@@ -39,15 +39,15 @@ For `delta` syntax check out React's [Immutability Helpers].
 
 ## Examples
 
-Check out [the test file](https://caseywebdev.github.io/curator/test.html) for a
+Check out [the test file](https://caseywebdev.github.io/cursors/test.html) for a
 full example. Here's the basics:
 
 ```jsx
 var MyComponent = React.createClass({
 
-  // First, mixin Curator to add the appropriate functions to this component
+  // First, mixin Cursors to add the appropriate functions to this component
   // definition.
-  mixins: [Curator],
+  mixins: [Cursors],
 
   // The only component that should define `getInitialState` is the root
   // component. It should define its state in the `local` namespace. This allows
