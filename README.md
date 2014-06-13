@@ -14,7 +14,7 @@ becomes easier, and bugs are easier to avoid.
 ## Install
 
 ```bash
-bower install Cursors
+bower install cursors
 ```
 
 ## API
