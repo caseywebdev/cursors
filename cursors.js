@@ -32,7 +32,7 @@
     return delta;
   };
 
-  var getLocalState = function (cursor) {
+  var getCursorState = function (cursor) {
     var state = cursor.root.state;
     for (var i = 0, l = cursor.path.length; state && i < l; ++i) {
       state = state[cursor.path[i]];
@@ -42,7 +42,7 @@
 
   var getCursorStates = function (cursors) {
     var states = {};
-    for (var name in cursors) states[name] = getLocalState(cursors[name]);
+    for (var name in cursors) states[name] = getCursorState(cursors[name]);
     return states;
   };
 
@@ -67,7 +67,11 @@
       if (path == null) path = [];
       var cursors = this.props.cursors;
       var cursor = (cursors && cursors[name]) || {root: this, path: [name]};
-      return {root: cursor.root, path: cursor.path.concat(path)};
+      return {
+        root: cursor.root,
+        path: cursor.path.concat(path),
+        state: getCursorState(cursor)
+      };
     },
 
     update: function (name, delta) {
