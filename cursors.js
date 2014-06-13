@@ -64,14 +64,10 @@
     },
 
     getCursor: function (name, path) {
-      if (path == null) path = [];
       var cursors = this.props.cursors;
       var cursor = (cursors && cursors[name]) || {root: this, path: [name]};
-      return {
-        root: cursor.root,
-        path: cursor.path.concat(path),
-        state: getCursorState(cursor)
-      };
+      if (path == null) return cursor;
+      return {root: cursor.root, path: cursor.path.concat(path)};
     },
 
     update: function (name, delta) {
