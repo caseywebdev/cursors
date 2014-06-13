@@ -25,9 +25,9 @@
 
   var wrapWithPath = function (delta, path) {
     for (var i = path.length - 1; i >= 0; --i) {
-      var temp = {};
-      temp[path[i]] = delta;
-      delta = temp;
+      var tmp = {};
+      tmp[path[i]] = delta;
+      delta = tmp;
     }
     return delta;
   };
