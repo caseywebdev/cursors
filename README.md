@@ -27,15 +27,15 @@ The Cursors object itself should be mixed-in to all Cursors-using components wit
 
 ### Component-Level
 
-#### this.getCursor(name, [path])
+#### this.getCursor(key, [path])
 
-Returns a new `cursor` with its path set to `name`'s path concatenated with
-`path`
+Returns a new `cursor` with its path set to `key`'s path concatenated with
+`path`.
 
-#### this.update(name, delta)
+#### this.update(key, delta)
 
-Update the specified state key `name` with the change definitions in `delta`.
-For `delta` syntax check out React's [Immutability Helpers].
+Update the specified state key `key` with the change definitions in `delta`. For
+`delta` syntax check out React's [Immutability Helpers].
 
 ## Examples
 
@@ -49,24 +49,24 @@ var MyComponent = React.createClass({
   // definition.
   mixins: [Cursors],
 
-  // The only component that should define `getInitialState` is the root
-  // component. It should define its state in the `local` namespace. This allows
-  // `remotes` to use other namespaces in `state`
+  // The only component that should need to define `getInitialState` is the root
+  // component.
   getInitialState: function () {
     return {
-      users: [...]
+      users: [{name: 'Casey'}]
     };
   },
 
   // In order for state changes to be recognized globally, you should never need
-  // to use `this.setState`. Instead, use `this.update`. `update` takes a delta
-  // object. Check the "Immutability Helpers" link for more information.
+  // to use `this.setState`. Instead, use `this.update`. `update` takes a key
+  // and a delta object. Check the "Immutability Helpers" link for more
+  // information.
   handleChange: function (ev) {
     this.update('user', {name: {$set: ev.target.value}});
   },
 
   // When rendering child components, always pass the appropriate `cursor` for
-  // the child component via `this.getCursor(indexOrIndicies)`.
+  // the child component via `this.getCursor(key, [path])`.
   render: function () {
     return (
       <MyUsersComponent cursors={{users: this.getCursor('users')}} />

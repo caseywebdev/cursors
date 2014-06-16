@@ -42,7 +42,7 @@
 
   var getCursorStates = function (cursors) {
     var states = {};
-    for (var name in cursors) states[name] = getCursorState(cursors[name]);
+    for (var key in cursors) states[key] = getCursorState(cursors[key]);
     return states;
   };
 
@@ -63,15 +63,15 @@
       return !isEqual(this.props, props) || !isEqual(this.state, state);
     },
 
-    getCursor: function (name, path) {
+    getCursor: function (key, path) {
       var cursors = this.props.cursors;
-      var cursor = (cursors && cursors[name]) || {root: this, path: [name]};
+      var cursor = (cursors && cursors[key]) || {root: this, path: [key]};
       if (path == null) return cursor;
       return {root: cursor.root, path: cursor.path.concat(path)};
     },
 
-    update: function (name, delta) {
-      var cursor = this.getCursor(name);
+    update: function (key, delta) {
+      var cursor = this.getCursor(key);
       var root = cursor.root;
       root.setState(update(root.state, wrapWithPath(delta, cursor.path)));
     }
