@@ -1,8 +1,8 @@
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['react/addons'], factory);
+    define(['react'], factory);
   } else if (typeof exports !== 'undefined') {
-    module.exports = factory(require('react/addons'));
+    module.exports = factory(require('react'));
   } else {
     root.Cursors = factory(root.React);
   }
