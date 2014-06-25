@@ -52,7 +52,9 @@
     },
 
     componentWillMount: function () {
-      this.setState(getCursorStates(this.props.cursors));
+      var states = getCursorStates(this.props.cursors);
+      if (!this.state) this.state = {};
+      for (var key in states) this.state[key] = states[key];
     },
 
     componentWillReceiveProps: function (nextProps) {
