@@ -32,10 +32,10 @@ The Cursors object itself should be mixed-in to all Cursors-using components wit
 Returns a new `cursor` with its path set to `key`'s path concatenated with
 `path`.
 
-#### this.update(key, delta)
+#### this.update(deltas)
 
-Update the specified state key `key` with the change definitions in `delta`. For
-`delta` syntax check out React's [Immutability Helpers].
+Update the state with the change definitions in `deltas`. For `delta` syntax
+check out React's [Immutability Helpers].
 
 ## Examples
 
@@ -62,7 +62,7 @@ var MyComponent = React.createClass({
   // and a delta object. Check the "Immutability Helpers" link for more
   // information.
   handleChange: function (ev) {
-    this.update('user', {name: {$set: ev.target.value}});
+    this.update({user: {name: {$set: ev.target.value}}});
   },
 
   // When rendering child components, always pass the appropriate `cursor` for

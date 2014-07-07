@@ -9,7 +9,7 @@
 
     handleChange: function (ev) {
       var val = parseInt(ev.target.value) || 0;
-      if (this.state.number !== val) this.update('number', {$set: val});
+      if (this.state.number !== val) this.update({number: {$set: val}});
     },
 
     handleRemove: function () {
@@ -35,11 +35,11 @@
     mixins: [Cursors],
 
     handleAdd: function () {
-      this.update('numbers', {$push: [0]});
+      this.update({numbers: {$push: [0]}});
     },
 
     handleRemove: function (i) {
-      this.update('numbers', {$splice: [[i, 1]]});
+      this.update({numbers: {$splice: [[i, 1]]}});
     },
 
     renderNumber: function (n, i) {

@@ -68,10 +68,23 @@
       return {root: cursor.root, path: cursor.path.concat(path)};
     },
 
-    update: function (key, delta) {
-      var cursor = this.getCursor(key);
-      var root = cursor.root;
-      root.setState(update(root.state, wrapWithPath(delta, cursor.path)));
+    update: function (deltas) {
+      var i, l, change;
+      var changes = [];
+      for (var key in deltas) {
+        var cursor = this.getCursor(key);
+        var root = cursor.root;
+        var path = cursor.path;
+        for (i = 0, l = changes.length, change = null; !change && i < l; ++i) {
+          if (root === changes[i].root) change = changes[i];
+        }
+        if (!change) changes.push(change = {root: root, state: root.state});
+        change.state = update(change.state, wrapWithPath(deltas[key], path));
+      }
+      for (i = 0, l = changes.length; i < l; ++i) {
+        change = changes[i];
+        change.root.setState(change.state);
+      }
     }
   };
 });
