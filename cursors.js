@@ -47,6 +47,10 @@
   };
 
   return {
+    propTypes: {
+      cursors: React.PropTypes.object
+    },
+
     componentWillMount: function () {
       var states = getCursorStates(this.props.cursors);
       if (!this.state) this.state = {};
