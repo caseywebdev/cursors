@@ -87,7 +87,7 @@
       }
       for (i = 0, l = changes.length; i < l; ++i) {
         change = changes[i];
-        change.root.setState(change.state);
+        if (change.root.isMounted()) change.root.setState(change.state);
       }
     }
   };
