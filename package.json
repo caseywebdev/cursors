@@ -1,6 +1,6 @@
 {
   "name": "cursors",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "author": "Casey Foster <c@sey.me>",
   "licence": "MIT",
   "main": "cursors.js",
