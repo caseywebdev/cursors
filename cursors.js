@@ -82,8 +82,9 @@
         for (i = 0, l = changes.length, change = null; !change && i < l; ++i) {
           if (root === changes[i].root) change = changes[i];
         }
-        if (!change) changes.push(change = {root: root, state: root.state});
-        change.state = update(change.state, wrapWithPath(deltas[key], path));
+        if (!change) changes.push(change = {root: root, state: {}});
+        var delta = wrapWithPath(deltas[key], path);
+        change.state[path[0]] = update(root.state, delta)[path[0]];
       }
       for (i = 0, l = changes.length; i < l; ++i) {
         change = changes[i];
