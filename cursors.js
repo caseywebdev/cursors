@@ -11,16 +11,36 @@
 
   var update = React.addons.update;
 
-  var isEqualSubset = function (a, b) {
-    for (var key in a) {
-      if (key === 'cursors') continue;
-      if (b[key] !== a[key]) return false;
-    }
+  var size = function (obj) {
+    var l = 0;
+    for (var key in obj) ++l;
+    return l;
+  };
+
+  var isEqualArray = function (a, b) {
+    if (a.length !== b.length) return false;
+    for (var i = 0, l = a.length; i < l; ++i) if (a[i] !== b[i]) return false;
     return true;
   };
 
-  var isEqual = function (a, b) {
-    return isEqualSubset(a, b) && isEqualSubset(b, a);
+  var isEqualObject = function (a, b) {
+    if (size(a) !== size(b)) return false;
+    for (var key in a) if (a[key] !== b[key]) return false;
+    return true;
+  };
+
+  var isEqualCursor = function (a, b) {
+    if (a == b) return true;
+    if (a == null || b == null) return false;
+    if (a.root !== b.root || !isEqualArray(a.path, b.path)) return false;
+    return true;
+  };
+
+  var areEqualCursors = function (a, b) {
+    if (a == b) return true;
+    if (a == null || b == null || size(a) !== size(b)) return false;
+    for (var key in a) if (!isEqualCursor(a[key], b[key])) return false;
+    return true;
   };
 
   var wrapWithPath = function (delta, path) {
@@ -62,7 +82,10 @@
     },
 
     shouldComponentUpdate: function (props, state) {
-      return !isEqual(this.props, props) || !isEqual(this.state, state);
+      var delta = {cursors: {$set: null}};
+      return !areEqualCursors(this.props.cursors, props.cursors) ||
+        !isEqualObject(update(this.props, delta), update(props, delta)) ||
+        !isEqualObject(this.state, state);
     },
 
     getCursor: function (key, path) {

@@ -3,6 +3,7 @@
 
   var React = root.React;
   var Cursors = root.Cursors;
+  var Chart = root.Chart;
 
   var NumberListItem = React.createClass({
     mixins: [Cursors],
@@ -88,57 +89,106 @@
     }
   });
 
+  var ChartComponent = React.createClass({
+    mixins: [Cursors],
+
+    componentDidMount: function () {
+      this.chart = new Chart(this.getDOMNode().getContext('2d'));
+      this.draw();
+    },
+
+    componentDidUpdate: function () {
+      this.draw();
+    },
+
+    draw: function () {
+      this.chart.Line({
+        labels: this.state.numbers.map(function (__, i) { return i + 1; }),
+        datasets: [{label: 'Numbers', data: this.state.numbers}]
+      }, {animation: false});
+    },
+
+    render: function () {
+      return React.DOM.canvas();
+    }
+  });
+
   var App = React.createClass({
     mixins: [Cursors],
 
     getInitialState: function () {
       return {
-        numbers: [1, 2, 3]
+        i: 0,
+        history: [[1, 2, 3]],
       };
     },
 
-    componentWillMount: function () {
-      this.undo = [];
-      this.redo = [];
+    componentDidUpdate: function (__, prev) {
+      var i = prev.i;
+      var before = prev.history[i];
+      var after = this.state.history[i];
+      if (this.state.i !== i || this.state.previewI !== prev.previewI) return;
+      this.update({
+        i: {$set: i + 1},
+        history: {$splice: [[i, Infinity, before, after]]}
+      });
     },
 
-    componentWillUpdate: function () {
-      if (this.timeTraveling) return this.timeTraveling = false;
-      this.undo.push(this.state);
-      this.redo = [];
+    canUndo: function () {
+      return this.state.i > 0;
+    },
+
+    canRedo: function () {
+      return this.state.i < this.state.history.length - 1;
     },
 
     handleUndo: function () {
-      if (!this.undo.length) return;
-      this.timeTraveling = true;
-      this.redo.push(this.state);
-      this.setState(this.undo.pop());
+      this.update({i: {$set: this.state.i - 1}});
     },
 
     handleRedo: function () {
-      if (!this.redo.length) return;
-      this.timeTraveling = true;
-      this.undo.push(this.state);
-      this.setState(this.redo.pop());
+      this.update({i: {$set: this.state.i + 1}});
+    },
+
+    renderHistory: function () {
+      return this.state.history.map(function (__, i) {
+        var delta = i - this.state.i;
+        return React.DOM.div({
+          key: i,
+          className: 'history-item ' +
+            (delta ? delta > 0 ? 'ahead' : 'behind' : 'now'),
+          onMouseEnter: this.update.bind(this, {previewI: {$set: i}}),
+          onMouseLeave: this.update.bind(this, {previewI: {$set: null}}),
+          onClick: this.update.bind(this, {i: {$set: i}})
+        }, delta ? delta > 0 ? '+' + delta : delta : 'now');
+      }, this);
     },
 
     render: function () {
+      var previewI = this.state.previewI;
+      var i = previewI == null ? this.state.i : previewI;
       return (
         React.DOM.div(null,
-          React.DOM.input({
-            type: 'button',
-            onClick: this.handleUndo,
-            value: 'Undo',
-            disabled: this.undo.length === 0
-          }),
-          React.DOM.input({
-            type: 'button',
-            onClick: this.handleRedo,
-            value: 'Redo',
-            disabled: this.redo.length === 0
-          }),
-          NumberList({cursors: {numbers: this.getCursor('numbers')}}),
-          Stats({cursors: {numbers: this.getCursor('numbers')}})
+          React.DOM.div({className: 'history'},
+            React.DOM.h1(null, 'History'),
+            React.DOM.button({
+              type: 'button',
+              onClick: this.handleUndo,
+              disabled: !this.canUndo()
+            }, 'Undo'),
+            React.DOM.button({
+              type: 'button',
+              onClick: this.handleRedo,
+              disabled: !this.canRedo()
+            }, 'Redo'),
+            React.DOM.div({className: 'history-items'}, this.renderHistory())
+          ),
+          React.DOM.div({className: 'numbers'},
+            React.DOM.h1(null, 'Numbers'),
+            NumberList({cursors: {numbers: this.getCursor('history', i)}}),
+            Stats({cursors: {numbers: this.getCursor('history', i)}}),
+            ChartComponent({cursors: {numbers: this.getCursor('history', i)}})
+          )
         )
       );
     }
