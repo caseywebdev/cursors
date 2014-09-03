@@ -42,37 +42,63 @@ check out React's [Immutability Helpers].
 Check out [the test file](https://caseywebdev.github.io/cursors/test.html) for a
 full example. Here's the basics:
 
-```jsx
-var MyComponent = React.createClass({
+```js
+var User = React.createClass({
+
+  // First, mixin Cursors to add the appropriate functions to this component
+  // definition.
+  mixins: [Cursors],
+
+  // In order for state changes to be recognized globally, you should never need
+  // to use `this.setState`. Instead, use `this.update`. `update` takes a key
+  // and a delta object. Check the "Immutability Helpers" link for more
+  // information. By using `update`, the value will be updated at the root level
+  // of the cursor, and changes will be propagated down back to the children.
+  // This is a huge win for cursors, because it removes the need to nest
+  // callbacks down for changes to objects that live higher up in the hierarchy.
+  handleChange: function (ev) {
+    this.update({user: {name: {$set: ev.target.value}}});
+  },
+
+  // The value of any cursors passed into this component will be reflected in
+  // the `this.state` object. This interface allows children to not depend on
+  // being passed cursors, but use them transparently if they are passed.
+  render: function () {
+    return <input value={this.state.user.name} onChange={this.handleChange} />;
+  }
+});
+
+var Users = React.createClass({
 
   // First, mixin Cursors to add the appropriate functions to this component
   // definition.
   mixins: [Cursors],
 
   // The only component that should need to define `getInitialState` is the root
-  // component.
+  // component. Child components can define their initial state, but state that
+  // is passed into them via parent cursors will override the corresponding
+  // initial state.
   getInitialState: function () {
     return {
-      users: [{name: 'Casey'}]
+      users: this.props.users || []
     };
-  },
-
-  // In order for state changes to be recognized globally, you should never need
-  // to use `this.setState`. Instead, use `this.update`. `update` takes a key
-  // and a delta object. Check the "Immutability Helpers" link for more
-  // information.
-  handleChange: function (ev) {
-    this.update({user: {name: {$set: ev.target.value}}});
   },
 
   // When rendering child components, always pass the appropriate `cursor` for
   // the child component via `this.getCursor(key, [path])`.
+  renderUser: function (user, i) {
+    return <User cursors={{user: this.getCursor('users', i)}} />;
+  },
+
   render: function () {
-    return (
-      <MyUsersComponent cursors={{users: this.getCursor('users')}} />
-    );
+    return <div>{this.state.users.map(this.renderUser)}</div>;
   }
 });
+
+React.renderComponent(
+  <MyUsersComponent users={[{name: 'Casey'}, {name: 'Gunner'}]} />,
+  document.body
+);
 ```
 
 [React]: https://github.com/facebook/react
