@@ -4,7 +4,7 @@ Maintain your React state with Cursors.
 
 Cursors is a [React] mixin that is inspired by [David Nolan]'s [Om]. This is a
 much lighter implementation that is focused on Nolan's idea of a single global
-state and using cursors to to create smaller local states within a single shared
+state and using cursors to create smaller local states within a single shared
 data structure.
 
 Cursors leverages the [Immutability Helpers] provided by [React Add-ons]. By
