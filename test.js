@@ -14,7 +14,7 @@
     },
 
     handleRemove: function () {
-      this.props.onRemove(this.props.key);
+      this.update({numbers: {$splice: [[this.props.index, 1]]}});
     },
 
     render: function () {
@@ -39,15 +39,14 @@
       this.update({numbers: {$push: [0]}});
     },
 
-    handleRemove: function (i) {
-      this.update({numbers: {$splice: [[i, 1]]}});
-    },
-
     renderNumber: function (n, i) {
       return NumberListItem({
         key: i,
-        cursors: {number: this.getCursor('numbers', i)},
-        onRemove: this.handleRemove
+        index: i,
+        cursors: {
+          numbers: this.getCursor('numbers'),
+          number: this.getCursor('numbers', i)
+        }
       });
     },
 
