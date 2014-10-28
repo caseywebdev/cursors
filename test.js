@@ -5,7 +5,7 @@
   var Cursors = root.Cursors;
   var Chart = root.Chart;
 
-  var NumberListItem = React.createClass({
+  var NumberListItem = React.createFactory(React.createClass({
     mixins: [Cursors],
 
     handleChange: function (ev) {
@@ -18,21 +18,21 @@
     },
 
     render: function () {
-      return React.DOM.div(null,
-        React.DOM.input({
+      return React.createElement('div', null,
+        React.createElement('input', {
           value: this.state.number,
           onChange: this.handleChange
         }),
-        React.DOM.input({
+        React.createElement('input', {
           type: 'button',
           onClick: this.handleRemove,
           value: 'Remove'
         })
       );
     }
-  });
+  }));
 
-  var NumberList = React.createClass({
+  var NumberList = React.createFactory(React.createClass({
     mixins: [Cursors],
 
     handleAdd: function () {
@@ -52,18 +52,18 @@
     },
 
     render: function () {
-      return React.DOM.div(null,
+      return React.createElement('div', null,
         this.state.numbers.map(this.renderNumber),
-        React.DOM.input({
+        React.createElement('input', {
           type: 'button',
           onClick: this.handleAdd,
           value: 'Add New Number'
         })
       );
     }
-  });
+  }));
 
-  var Stats = React.createClass({
+  var Stats = React.createFactory(React.createClass({
     mixins: [Cursors],
 
     getCardinality: function () {
@@ -81,15 +81,17 @@
     },
 
     render: function () {
-      return React.DOM.div(null,
-        React.DOM.div(null, 'Cardinality: ' + this.getCardinality()),
-        React.DOM.div(null, 'Sum: ' + this.getSum()),
-        React.DOM.div(null, 'Mean: ' + this.getMean())
+      return React.createElement('div', null,
+        React.createElement('div', null,
+          'Cardinality: ' + this.getCardinality()
+        ),
+        React.createElement('div', null, 'Sum: ' + this.getSum()),
+        React.createElement('div', null, 'Mean: ' + this.getMean())
       );
     }
-  });
+  }));
 
-  var ChartComponent = React.createClass({
+  var ChartComponent = React.createFactory(React.createClass({
     mixins: [Cursors],
 
     componentDidMount: function () {
@@ -109,11 +111,11 @@
     },
 
     render: function () {
-      return React.DOM.canvas();
+      return React.createElement('canvas');
     }
-  });
+  }));
 
-  var App = React.createClass({
+  var App = React.createFactory(React.createClass({
     mixins: [Cursors],
 
     getInitialState: function () {
@@ -153,7 +155,7 @@
     renderHistory: function () {
       return this.state.history.map(function (__, i) {
         var delta = i - this.state.i;
-        return React.DOM.div({
+        return React.createElement('div', {
           key: i,
           className: 'history-item ' +
             (delta ? delta > 0 ? 'ahead' : 'behind' : 'now'),
@@ -168,23 +170,25 @@
       var previewI = this.state.previewI;
       var i = previewI == null ? this.state.i : previewI;
       return (
-        React.DOM.div(null,
-          React.DOM.div({className: 'history'},
-            React.DOM.h1(null, 'History'),
-            React.DOM.button({
+        React.createElement('div', null,
+          React.createElement('div', {className: 'history'},
+            React.createElement('h1', null, 'History'),
+            React.createElement('button', {
               type: 'button',
               onClick: this.handleUndo,
               disabled: !this.canUndo()
             }, 'Undo'),
-            React.DOM.button({
+            React.createElement('button', {
               type: 'button',
               onClick: this.handleRedo,
               disabled: !this.canRedo()
             }, 'Redo'),
-            React.DOM.div({className: 'history-items'}, this.renderHistory())
+            React.createElement('div', {className: 'history-items'},
+              this.renderHistory()
+            )
           ),
-          React.DOM.div({className: 'numbers'},
-            React.DOM.h1(null, 'Numbers'),
+          React.createElement('div', {className: 'numbers'},
+            React.createElement('h1', null, 'Numbers'),
             NumberList({cursors: {numbers: this.getCursor('history', i)}}),
             Stats({cursors: {numbers: this.getCursor('history', i)}}),
             ChartComponent({cursors: {numbers: this.getCursor('history', i)}})
@@ -192,9 +196,9 @@
         )
       );
     }
-  });
+  }));
 
   document.addEventListener('DOMContentLoaded', function () {
-    React.renderComponent(App(), document.body);
+    React.render(App(), document.body);
   });
 })(this);
