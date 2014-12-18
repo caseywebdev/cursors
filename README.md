@@ -2,8 +2,8 @@
 
 Maintain your React state with Cursors.
 
-Cursors is a [React] mixin that is inspired by [David Nolan]'s [Om]. This is a
-much lighter implementation that is focused on Nolan's idea of a single global
+Cursors is a [React] mixin that is inspired by [David Nolen]'s [Om]. This is a
+much lighter implementation that is focused on Nolen's idea of a single global
 state and using cursors to create smaller local states within a single shared
 data structure.
 
@@ -102,7 +102,7 @@ React.renderComponent(
 ```
 
 [React]: https://github.com/facebook/react
-[David Nolan]: https://github.com/swannodette
+[David Nolen]: https://github.com/swannodette
 [Om]: https://github.com/swannodette/om
 [Immutability Helpers]: http://facebook.github.io/react/docs/update.html
 [React Add-ons]: http://facebook.github.io/react/docs/addons.html
