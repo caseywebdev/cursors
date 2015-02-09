@@ -2,7 +2,7 @@
   "name": "cursors",
   "version": "0.5.0",
   "author": "Casey Foster <c@sey.me>",
-  "licence": "MIT",
+  "license": "MIT",
   "main": "cursors.js",
   "repository": {
     "type": "git",
