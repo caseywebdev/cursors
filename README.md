@@ -30,7 +30,9 @@ The Cursors object itself should be mixed-in to all Cursors-using components wit
 #### this.getCursor(key, [path])
 
 Returns a new `cursor` with its path set to `key`'s path concatenated with
-`path`.
+`path`. `key` and `path` should both be a `string` or `number`. Use an array of
+`string`s and/or `number`s for `path` if your path goes more than one level
+deep.
 
 #### this.update(deltas)
 
