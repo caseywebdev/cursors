@@ -107,7 +107,7 @@
         }
         if (!change) changes.push(change = {root: root, state: {}});
         var delta = wrapWithPath(deltas[key], path.slice(1));
-        change.state[path[0]] = update(root.state[path[0]], delta);
+        change.state[path[0]] = update((change.state[path[0]] || root.state[path[0]]), delta);
       }
       for (i = 0, l = changes.length; i < l; ++i) {
         change = changes[i];
