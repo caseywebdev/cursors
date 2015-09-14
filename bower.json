@@ -1,6 +1,6 @@
 {
   "name": "cursors",
-  "version": "0.6.1",
+  "version": "0.6.2",
   "ignore": [
     "/.gitignore",
     "/.npmignore",
@@ -9,7 +9,7 @@
     "/test.*"
   ],
   "dependencies": {
-    "react": "^0.13.0"
+    "react": ">= 0.13.0 < 0.15.0"
   },
   "devDependencies": {
     "chartjs": "x"
