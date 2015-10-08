@@ -49,7 +49,7 @@ var User = React.createClass({
 
   // First, mixin Cursors to add the appropriate functions to this component
   // definition.
-  mixins: [Cursors],
+  mixins: [Cursors.Mixin],
 
   // In order for state changes to be recognized globally, you should never need
   // to use `this.setState`. Instead, use `this.update`. `update` takes a key
@@ -74,7 +74,7 @@ var Users = React.createClass({
 
   // First, mixin Cursors to add the appropriate functions to this component
   // definition.
-  mixins: [Cursors],
+  mixins: [Cursors.Mixin],
 
   // The only component that should need to define `getInitialState` is the root
   // component. Child components can define their initial state, but state that
