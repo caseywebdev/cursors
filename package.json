@@ -1,6 +1,6 @@
 {
   "name": "cursors",
-  "version": "0.6.2",
+  "version": "0.7.0",
   "author": "Casey Foster <c@sey.me>",
   "license": "MIT",
   "main": "cursors.js",
@@ -9,6 +9,12 @@
     "url": "https://github.com/caseywebdev/cursors"
   },
   "dependencies": {
-    "react": ">= 0.13.0 < 0.15.0"
+    "react": ">= 0.14.0 < 0.15.0",
+    "react-addons-update": ">= 0.14.0 < 0.15.0"
+  },
+  "devDependencies": {
+    "cogs": "1.0.7",
+    "cogs-transformer-babel": "1.0.12",
+    "cogs-transformer-replace": "1.0.1"
   }
 }

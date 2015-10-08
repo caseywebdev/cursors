@@ -1,5 +1,4 @@
-/*.sublime-*
-/.gitignore
-/bower.json
-/bower_components
-/test.*
+/*
+!/cursors.js
+!/LICENSE.txt
+!/README.md
