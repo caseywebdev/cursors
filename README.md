@@ -23,7 +23,7 @@ bower install cursors
 
 #### Cursors
 
-The Cursors object itself should be mixed-in to all Cursors-using components with React's `mixin` method.
+The Cursors object itself should be mixed-in to all Cursors-using components.
 
 ### Component-Level
 
@@ -49,7 +49,7 @@ var User = React.createClass({
 
   // First, mixin Cursors to add the appropriate functions to this component
   // definition.
-  mixins: [Cursors.Mixin],
+  mixins: [Cursors],
 
   // In order for state changes to be recognized globally, you should never need
   // to use `this.setState`. Instead, use `this.update`. `update` takes a key
@@ -74,7 +74,7 @@ var Users = React.createClass({
 
   // First, mixin Cursors to add the appropriate functions to this component
   // definition.
-  mixins: [Cursors.Mixin],
+  mixins: [Cursors],
 
   // The only component that should need to define `getInitialState` is the root
   // component. Child components can define their initial state, but state that

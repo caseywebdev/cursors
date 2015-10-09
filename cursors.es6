@@ -39,7 +39,7 @@ const wrapWithPath = function (delta, path) {
 };
 
 const getCursorState = function (cursor) {
-  let state = cursor.root.state;
+  let {state} = cursor.root;
   for (let i = 0, l = cursor.path.length; state && i < l; ++i) {
     state = state[cursor.path[i]];
   }
@@ -52,7 +52,7 @@ const getCursorStates = function (cursors) {
   return states;
 };
 
-export const Mixin = {
+export default {
   propTypes: {
     cursors: React.PropTypes.object
   },
@@ -75,7 +75,7 @@ export const Mixin = {
   },
 
   getCursor(key, path) {
-    const cursors = this.props.cursors;
+    const {cursors} = this.props;
     const cursor = (cursors && cursors[key]) || {root: this, path: [key]};
     if (path == null) return cursor;
     return {root: cursor.root, path: cursor.path.concat(path)};
@@ -85,8 +85,7 @@ export const Mixin = {
     const changes = [];
     for (const key in deltas) {
       const cursor = this.getCursor(key);
-      const root = cursor.root;
-      const path = cursor.path;
+      const {root, path} = cursor;
       let change;
       for (let i = 0, l = changes.length; !change && i < l; ++i) {
         if (root === changes[i].root) change = changes[i];
@@ -102,34 +101,3 @@ export const Mixin = {
     }
   }
 };
-
-export class Component extends React.Component {
-  static propTypes = Mixin.propTypes
-
-  constructor(...args) {
-    super(...args);
-    return this::Mixin.componentWillMount(...args);
-  }
-
-  componentWillReceiveProps(...args) {
-    if (super.componentWillReceiveProps) {
-      super.componentWillReceiveProps(...args);
-    }
-    return this::Mixin.componentWillReceiveProps(...args);
-  }
-
-  shouldComponentUpdate(...args) {
-    if (super.shouldComponentUpdate) {
-      super.shouldComponentUpdate(...args);
-    }
-    return this::Mixin.shouldComponentUpdate(...args);
-  }
-
-  getCursor(...args) {
-    return this::Mixin.getCursor(...args);
-  }
-
-  update(...args) {
-    return this::Mixin.update(...args);
-  }
-}

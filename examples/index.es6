@@ -1,32 +1,36 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {Mixin, Component} from 'cursors';
+import Cursors from 'cursors';
 import Chart from 'chart';
 
-class NumberListItem extends Component {
+const NumberListItem = React.createClass({
+  mixins: [Cursors],
+
   handleChange(ev) {
     const val = parseInt(ev.target.value) || 0;
     if (this.state.number !== val) this.update({number: {$set: val}});
-  }
+  },
 
   handleRemove() {
     this.update({numbers: {$splice: [[this.props.index, 1]]}});
-  }
+  },
 
   render() {
     return (
       <div>
-        <input value={this.state.number} onChange={::this.handleChange} />
-        <input type='button' value='Remove' onClick={::this.handleRemove} />
+        <input value={this.state.number} onChange={this.handleChange} />
+        <input type='button' value='Remove' onClick={this.handleRemove} />
       </div>
     );
   }
-}
+});
 
-class NumberList extends Component {
+const NumberList = React.createClass({
+  mixins: [Cursors],
+
   handleAdd() {
     this.update({numbers: {$push: [0]}});
-  }
+  },
 
   renderNumber(n, i) {
     return (
@@ -39,30 +43,32 @@ class NumberList extends Component {
         }}
       />
     );
-  }
+  },
 
   render() {
     return (
       <div>
-        {this.state.numbers.map(::this.renderNumber)}
-        <input type='button' value='Add Number' onClick={::this.handleAdd} />
+        {this.state.numbers.map(this.renderNumber)}
+        <input type='button' value='Add Number' onClick={this.handleAdd} />
       </div>
     );
   }
-}
+});
 
-class Stats extends Component {
+const Stats = React.createClass({
+  mixins: [Cursors],
+
   getCardinality() {
     return this.state.numbers.length;
-  }
+  },
 
   getSum() {
     return this.state.numbers.reduce((sum, n) => sum + n, 0);
-  }
+  },
 
   getMean() {
     return this.getSum() / this.getCardinality();
-  }
+  },
 
   render() {
     return (
@@ -73,11 +79,11 @@ class Stats extends Component {
       </div>
     );
   }
-}
+});
 
 // Here's an example using Cursors.Mixin and React.createClass.
 const ChartComponent = React.createClass({
-  mixins: [Mixin],
+  mixins: [Cursors],
 
   componentDidMount() {
     this.draw();
@@ -100,11 +106,15 @@ const ChartComponent = React.createClass({
   }
 });
 
-export default class App extends Component {
-  state = {
-    i: 0,
-    history: [[1, 2, 3]]
-  }
+export default React.createClass({
+  mixins: [Cursors],
+
+  getInitialState() {
+    return {
+      i: 0,
+      history: [[1, 2, 3]]
+    };
+  },
 
   componentDidUpdate(__, prev) {
     const i = prev.i;
@@ -115,23 +125,23 @@ export default class App extends Component {
       i: {$set: i + 1},
       history: {$splice: [[i, Infinity, before, after]]}
     });
-  }
+  },
 
   canUndo() {
     return this.state.i > 0;
-  }
+  },
 
   canRedo() {
     return this.state.i < this.state.history.length - 1;
-  }
+  },
 
   handleUndo() {
     this.update({i: {$set: this.state.i - 1}});
-  }
+  },
 
   handleRedo() {
     this.update({i: {$set: this.state.i + 1}});
-  }
+  },
 
   renderHistory() {
     return this.state.history.map((__, i) => {
@@ -150,7 +160,7 @@ export default class App extends Component {
         </div>
       );
     });
-  }
+  },
 
   render() {
     const previewI = this.state.previewI;
@@ -161,14 +171,14 @@ export default class App extends Component {
           <h1>History</h1>
           <button
             type='button'
-            onClick={::this.handleUndo}
+            onClick={this.handleUndo}
             disabled={!this.canUndo()}
           >
             Undo
           </button>
           <button
             type='button'
-            onClick={::this.handleRedo}
+            onClick={this.handleRedo}
             disabled={!this.canRedo()}
           >
             Redo
@@ -184,4 +194,4 @@ export default class App extends Component {
       </div>
     );
   }
-}
+});
