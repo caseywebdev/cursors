@@ -97,7 +97,8 @@ export default {
     }
     for (let i = 0, l = changes.length; i < l; ++i) {
       const change = changes[i];
-      change.root.setState(change.state);
+      const {root} = change;
+      if (root._reactInternalInstance) root.setState(change.state);
     }
   }
 };

@@ -125,7 +125,9 @@
       }
       for (var i = 0, l = changes.length; i < l; ++i) {
         var change = changes[i];
-        change.root.setState(change.state);
+        var root = change.root;
+
+        if (root._reactInternalInstance) root.setState(change.state);
       }
     }
   };
