@@ -1,6 +1,6 @@
 {
   "name": "cursors",
-  "version": "0.8.1",
+  "version": "0.8.2",
   "author": "Casey Foster <c@sey.me>",
   "license": "MIT",
   "main": "cursors.js",
@@ -9,8 +9,8 @@
     "url": "https://github.com/caseywebdev/cursors"
   },
   "peerDependencies": {
-    "react": ">= 0.14.0 < 0.15.0",
-    "react-addons-update": ">= 0.14.0 < 0.15.0"
+    "react": "0.14 || >= 15.0.0-rc.1",
+    "react-addons-update": "0.14 || >= 15.0.0-rc.1"
   },
   "devDependencies": {
     "cogs": "1.0.7",
